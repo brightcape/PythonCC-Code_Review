@@ -14,18 +14,19 @@ def parsing_and_scrape_data(raw_data):
 		
 		
 		soup = BeautifulSoup(raw_data,'html.parser')
-		g_data= (soup.find_all('div',{"class":"g"}))
-		
-		for items in g_data:
-			product_details={}
-			atag= items.a
-			cite= items.cite
-			title = (atag.text)
-			link=(cite.text)
-			print (link)
-			product_details["Title"]=title
-			product_details["Links"]=link
-			write_on_csv(product_details)
+		column_data = soup.find_all({'div': 'column'})
+
+		for items in column_data:
+			for a in items.find_all('a'):
+				if 'onze-bieren' in a.get('href'):
+					product_details={}
+					ahref= a.get('href')
+					title = (a.text)
+					link=(ahref)
+					print (link)
+					product_details["Title"]=title
+					product_details["Links"]=link
+					write_on_csv(product_details)
 		
 		
 
@@ -42,3 +43,5 @@ def write_on_csv(data):
 		
 		writer.writerow(data)
 		print ('wrote on to the file')
+
+# https://100watt.nl/brouwerij/onze-bieren/
